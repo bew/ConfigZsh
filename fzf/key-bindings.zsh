@@ -19,28 +19,90 @@ function __fzfcmd
 	echo "fzf ${FZF_BEW_LAYOUT} ${FZF_BEW_KEYBINDINGS}"
 }
 
-function __fsel
+function __get_prefix
 {
-	local filters="$1"
+    # local completion_prefix="${LBUFFER/* /}"
 
-	if [ -n "$2" ]; then
-		local base_dir="$2"
-        base_dir=${~base_dir} # expand ~ (at least)
-	else
-		local base_dir='.'
-	fi
-	local cmd="command find -L '$base_dir' ${FIND_IGNORE_OPTIONS} \
-		$filters
-		2> /dev/null | sed 1d"
-	eval "$cmd" | $(__fzfcmd) --multi | while read item; do
-		echo -n "${(q)item} "
-	done
-	echo
+    ### Prefix (part of arg before cursor (represented as: |))
+    #
+    # 1. can be empty
+    #    > | <
+    #
+    #    => _prefix=''
+    #
+    # 2. can be in a shell argument
+    #    > vim foo|bar <
+    #
+    #    => _prefix='foo'
+    #
+    # 3. cursor can be on whitespace
+    #    > vim foo| bar <
+    #
+    #    => _prefix='foo'
+    #
+    # 4. cursor can be in last whitespace
+    #    > vim foo  |       <
+    #
+    #    => _prefix=''
+    #
+    # 5. cursor can be at eol
+    #    > vim foo  | <
+    #
+    #    => _prefix=''
+    #
+    # 6. cursor can be at eol and after shell arg
+    #    > vim foo| <
+    #
+    #    => _prefix='foo'
+
+    local reply REPLY REPLY2
+    autoload -Uz split-shell-arguments
+    split-shell-arguments
+    local shell_args=(${reply[@]}) arg_no=$REPLY cursor=$REPLY2
+
+    # return vars
+    typeset -g _prefix
+
+    if (( arg_no == ${#shell_args} )); then
+        # cursor is in last whitespace area or at eol
+
+        # need to check the cursor is next to
+
+    elif (( arg_no % 2 == 1 )); then
+        # cursor on whitespace
+        ;
+    else
+        # cursor on shell argument
+        local shell_arg=${reply[$REPLY]}
+        if (( REPLY2 == 1 )); then
+            # cursor at beginning of arg
+            _base_dir=''
+            _query=''
+        else
+        fi
+
+    fi
 }
 
-function __fzfcmd
+function __base_dir_from_prefix
 {
-	echo "fzf ${FZF_BEW_LAYOUT} ${FZF_BEW_KEYBINDINGS}"
+    # $ mkdir -p dir; touch dir/file{1,2}
+    #
+    # TODO: redo this overview
+    ### Prefix (part of arg before cursor (represented as: |))
+    #
+    # 1. can be empty
+    #    > vim |
+    #
+    # 2. can be a dir (with(out) trailing /)
+    #    > vim dir|
+    #    > vim dir/|
+    #
+    # 3. can be partial path
+    #    > vim dir/fi|
+    #
+    #    => base_dir='dir'
+    #    => query='fi'
 }
 
 function zwidget::fzf::find_file

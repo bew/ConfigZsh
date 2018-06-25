@@ -1339,6 +1339,22 @@ bindkey -M menuselect '$' end-of-line
 bindkey -M menuselect 'a' accept-and-hold
 
 
+function test_split
+{
+    local reply REPLY REPLY2
+    autoload -Uz split-shell-arguments
+    split-shell-arguments
+    local shell_args=("${reply[@]}") arg_no=$REPLY cursor=$REPLY2
+
+    local arg=${shell_args[$arg_no]}
+    zle -M "arg_no:$arg_no arg:$arg #arg:${#arg}  cursor:$cursor #BUFFER:$#BUFFER CURSOR:$CURSOR"
+}
+zle -N test_split
+
+bindkey -M viins 'x' test_split
+
+
+
 #----------------------------------------------------------------------------------
 
 # Syntax hightlighting special end-of-file sourcing
