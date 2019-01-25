@@ -334,6 +334,10 @@ setopt LOCAL_TRAPS
 # Completion
 #----------------------------------------------------------------------------------
 
+# Add nix completions (must be done before `compinit`
+source ~/.zsh/nix-zsh-completions/nix-zsh-completions.plugin.zsh
+fpath=(~/.zsh/nix-zsh-completions/ $fpath)
+
 # Initialize the completion system
 autoload -U compinit && compinit
 zmodload zsh/complist

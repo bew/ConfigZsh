@@ -32,6 +32,11 @@ OTHER_PATHS+=(~/node_modules/.bin)
 
 [[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
 
+# TMP: during nix testing, make nix be opt-in
+function nix::load-paths
+{
+  source /etc/profile.d/nix.sh
+}
 
 
 # ------------------ set $PATH & env avrs

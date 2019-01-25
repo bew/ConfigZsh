@@ -7,3 +7,6 @@
 [submodule "zsh-hooks"]
 	path = zsh-hooks
 	url = git@github.com:willghatch/zsh-hooks.git
+[submodule "nix-zsh-completions"]
+	path = nix-zsh-completions
+	url = git@github.com:spwhitt/nix-zsh-completions.git
