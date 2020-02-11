@@ -2,6 +2,8 @@
 
 My personnal zsh config
 
+ARCHIVED - My zsh configs are now in a single dotfiles repository: https://github.com/bew/dotfiles/tree/master/zsh
+
 ## Screenshot
 
 ![Bew's zsh config](.media/zsh.png)
